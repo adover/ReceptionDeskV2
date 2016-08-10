@@ -24,7 +24,7 @@ export const ysColours = {
 	'thehulk': '#d7c700'
 }
 
-const fonts = {
+export const fonts = {
 	'din': 'DIN OT',
 	'portrait': 'Portrait Text'
 }
@@ -34,6 +34,15 @@ const fonts = {
  * It's pretty cool to use as we can just nest each of the style declarations in a view,
  * which I plan to do when I'm refactoring
  */
+
+const optionDefault = {
+		color: ysColours['samuraijack'],
+		textAlign: 'center',
+		fontSize: 20,
+		lineHeight: 40,
+		padding: 10,
+		fontFamily: fonts.din,
+}
 
 const styles = StyleSheet.create({
 	view: {
@@ -61,27 +70,28 @@ const styles = StyleSheet.create({
 		marginBottom: 20
 	},
 	option: {
-		color: ysColours['samuraijack'],
-		textAlign: 'center',
-		fontSize: 20,
-		lineHeight: 40,
-		padding: 10,
-		fontFamily: fonts.din,
+		...optionDefault,
 		borderWidth: 10,
 		borderColor: ysColours['squirtle'],
 		borderStyle: 'solid'
-	},
+	},	
+	optionNoBorder: optionDefault,
 	button: {
+		marginTop: 50,
 		color: ysColours['courage'],
 		textAlign: 'center',
 		fontSize: 20,
+		lineHeight: 40,
+		height: 60,
 		fontFamily: fonts.din,
+		fontWeight: 'bold',
 		backgroundColor: ysColours['stimpy']
 	},
 	textInput: {
 		alignSelf: 'stretch',
-		height: 50,
-		padding: 10,
+		textAlign: 'center',
+		height: 60,
+		padding: 0,
 		fontFamily: fonts.din,
 		fontWeight: 'bold',
 		backgroundColor: ysColours['squirtle'],

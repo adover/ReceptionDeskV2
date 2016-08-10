@@ -12,7 +12,8 @@ import {
 } from 'react-redux';
 import _ from 'lodash';
 import styles, { 
-	ysColours 
+	ysColours,
+	fonts
 } from '../styles/styles';
 
 /**
@@ -242,7 +243,7 @@ class Meeting extends React.Component{
 				<Text style={ styles.question }>{ this.props.view_1.q }</Text>
 				<AutoComplete
 	        onTyping={ (text) => this.handleChange(text) }
-	        onSelect={ (e) => { selectedValue = e } }
+	        onSelect={ (e) => { selectedValue = e; this.autoCompleteSubmit(selectedValue); } }
 	        onSubmitEditing={ (e) => { this.autoCompleteSubmit(selectedValue) } }
 
 	        suggestions={ this.state.people }
@@ -251,7 +252,7 @@ class Meeting extends React.Component{
 	        style={ styles.textInput }
 	        clearButtonMode='always'
 	        returnKeyType='go'
-	        textAlign='left'
+	        textAlign='center'
 	        clearTextOnFocus={ true }
 
 	        maximumNumberOfAutoCompleteRows={ 10 }
@@ -260,17 +261,16 @@ class Meeting extends React.Component{
 	        showTextFieldDropShadowWhenAutoCompleteTableIsOpen={ false }
 	        autoCompleteTableViewHidden={ false }
 
-	        autoCompleteTableBorderColor='lightblue'
-	        autoCompleteTableBackgroundColor='azure'
+	        autoCompleteTableBackgroundColor={ ysColours['squirtle'] }
 	        autoCompleteTableCornerRadius={ 0 }
-	        autoCompleteTableBorderWidth={ 1 }
+	        autoCompleteTableBorderWidth={ 0 }
 
-	        autoCompleteRowHeight={ 35 }
+	        autoCompleteRowHeight={ 60 }
 
 	        autoCompleteFontSize={ 20 }
-	        autoCompleteRegularFontName='Helvetica Neue'
-	        autoCompleteBoldFontName='Helvetica Bold'
-	        autoCompleteTableCellTextColor={'red'}
+	        autoCompleteRegularFontName='Din OT'
+	        autoCompleteBoldFontName='Din OT'
+	        autoCompleteTableCellTextColor={'white'}
 	      />
 				{ autoCompleteError }	   
 	   	</View>
@@ -296,17 +296,16 @@ class Meeting extends React.Component{
 
 		return(
 			<View>
-				<Text style={ styles.question }>{ this.props.view_2.q }</Text>
+				<Text style={ styles.optionNoBorder }>{ this.props.view_2.q }</Text>
 				<TextInput 
 					onChangeText={(name) => this.setState({ visitorName: name })} 
 					style={ styles.textInput }
 					/>
-				<Text style={ styles.option }>{ this.props.view_2.q2 }</Text>
+				<Text style={ styles.optionNoBorder }>{ this.props.view_2.q2 }</Text>
 				<TextInput 
 					onChangeText={(company) => this.setState({ company: company })} 
 					style={ styles.textInput }
 					/>
-				<Text style={ styles.option }>{ this.props.view_2.q3 }</Text>
         <TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } onPress={ this.handleSubmit }>
         	<Text style={ styles.button }>{ this.props.view_2.submit.replace('!!!!', 'person') }</Text>
         </TouchableHighlight>

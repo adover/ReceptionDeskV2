@@ -79,7 +79,7 @@ class Drinks extends React.Component{
 				{ this.props.text.answers.map((a) => {
 					return (
 						<TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } key={ a } onPress={ () => { this.handleDrinkSelection(a) } }>
-							<Text>{ a }</Text>
+							<Text style={ styles.option }>{ a }</Text>
 						</TouchableHighlight>
 					)
 				}) }
