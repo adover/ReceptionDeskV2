@@ -28,7 +28,14 @@ class Drinks extends React.Component{
 		super();
 
 		this.handleDrinkSelection = this.handleDrinkSelection.bind(this);
-
+		
+		this.state = {
+			visiting: null,
+			visitorName: null,
+			company: null,
+			amountOfDrinksToMake: 0,
+			drinksToMake: []
+		}
 	}
 	
 	/**
@@ -40,8 +47,8 @@ class Drinks extends React.Component{
 		this.setState({
 			visiting: this.props.visiting,
 			visitorName: this.props.visitorName,
-			name: this.props.visitorName,
-			company: this.props.company
+			company: this.props.company,
+			amountOfDrinksToMake: this.props.visitorName.length
 		})
 
 	}
@@ -52,9 +59,41 @@ class Drinks extends React.Component{
 	
 	handleDrinkSelection (drink) {
 
-		let { visiting, visitorName, company } = this.state;
+		/**
+		 * Push the drink into the drinksToMake state array
+		 */
+		
+		let drinks = this.state.drinksToMake;
 
-		this._navigate('Default', { drink, cameFrom: 'Drinks', visiting, visitorName, company })
+		drinks.push(drink);
+
+		this.setState({
+			drinksToMake: drinks
+		})
+
+		if(this.state.amountOfDrinksToMake > 1){ 
+
+			/**
+			 * Change the state of the drinks
+			 */
+
+			 const drinksLeft = this.state.amountOfDrinksToMake - 1;
+
+			 this.setState({
+			 	amountOfDrinksToMake: drinksLeft
+			 })
+
+		}else{
+
+			/**
+			 * Once they've selected the final drink we'll navigate to the next page
+			 */
+			
+			let { visiting, visitorName, company, drinksToMake } = this.state;
+
+			this._navigate('Default', { drinksToMake, cameFrom: 'Drinks', visiting, visitorName, company });
+
+		}
 	}
 
 	/**
@@ -72,10 +111,20 @@ class Drinks extends React.Component{
 		
 		const text = this.props.text;
 
+		/**
+		 * If we have to make more than one drink, let's show a piece of text that lets them know
+		 */
+		
+		const drinksToMake = 
+			this.state.amountOfDrinksToMake > 1 ? 
+				<Text style={ styles.smallText }>{ `You have ${this.state.amountOfDrinksToMake} left to choose` }</Text> 
+					: null;
+
 		return (
 			<View style={ styles.view }>
 				<Text style={ styles.mainTitle }>{ this.props.text.title }</Text>
 				<Text style={ styles.question }>{ this.props.text.q }</Text>
+				{ drinksToMake }
 				{ this.props.text.answers.map((a) => {
 					return (
 						<TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } key={ a } onPress={ () => { this.handleDrinkSelection(a) } }>

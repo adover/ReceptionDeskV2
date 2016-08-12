@@ -2,12 +2,14 @@ import React from 'react';
 import { 
 	Text, 
 	TouchableHighlight, 
-	View 
+	View,
+	Navigator
 } from 'react-native';
 import { 
 	connect 
 } from 'react-redux';
 import CONFIG from '../config/config';
+import each from 'lodash/each';
 import Slack from '../utility/slackOAuth';
 import styles, { 
 	ysColours 
@@ -33,6 +35,7 @@ class Default extends React.Component{
 		this.getSource = this.getSource.bind(this);
 		this.getOnTheirWayMessage = this.getOnTheirWayMessage.bind(this);
 		this.handleTheDrink = this.handleTheDrink.bind(this);
+		this.wantDrink = this.wantDrink.bind(this);
 
 		this.state = {
 			personComing: 'Someone',
@@ -48,9 +51,19 @@ class Default extends React.Component{
 	 */
 	
 	componentDidMount () {
+		
 		this.timer = setTimeout(() => {
+
+			/**
+			 * For some reason the component does not unmount on navigation, so I'll manually clear
+			 * the timeout to ensure it doesn't fire again
+			 */
+			
+			clearTimeout(this.timer);
+
 			this._navigate('Welcome');
-		}, 20000);
+
+		}, 5000);
 
 		/**
 		 * Let's work out where they came from
@@ -70,6 +83,10 @@ class Default extends React.Component{
 
 	}
 
+	/**
+	 * This is a utility function to help us find out what view they came from
+	 */
+	
 	getSource () {
 
 		if(this.props.cameFrom === 'Drinks'){
@@ -90,21 +107,54 @@ class Default extends React.Component{
 	}
 
 	getOnTheirWayMessage () {
-
+		
 		/**
 		 * This function works out where they came from so we can send the right 'on their way message',
 		 * we also want to send Slack messages to people who need to be contacted, so we might as well
 		 * do it here. It's probably worth renaming the function if that's the case
 		 */
+		
 		if(this.props.visiting){
 
+			/**
+			 * Before we make the call we need to make sure that the person we are trying to contact
+			 * is online. If not it renders the whole machine pointless
+			 */
+			
+			let userOnline;
+			let messageReciever = Slack.getSlackUserNameFromName(this.props.visiting);
+			let visitingMessage = CONFIG.slack.messages.visitor;
+			let userID = Slack.getUserIdFromName(messageReciever);
+
+			userOnline = Slack.getUserPresence(userID);		
+
+			/**
+			 * If they're not online we need to fall back to the default person who will pick it up
+			 */
+			
+			if(!userOnline){
+
+				/**
+				 * Modify the visiting message first
+				 */
+				
+				 visitingMessage = CONFIG.slack.messages.visitor + CONFIG.slack.messages.visitor_not_online;
+				
+				/**
+				 * Then update the visiting variable
+				 */
+				
+				messageReciever = CONFIG.slack.default_user;
+			
+			}
+
 			try{
-				console.log('visiting', this.props.visiting)
-				Slack.makeTheCall(CONFIG.slack.messages.visitor, {
+
+				Slack.makeTheCall(visitingMessage, {
 					'visiting': Slack.getSlackUserNameFromName(this.props.visiting),
 					'visitorName': this.props.visitorName,
 					'company': this.props.company 
-				}, this.props.visiting);
+				}, messageReciever);
 
 			}catch(e){
 
@@ -146,6 +196,8 @@ class Default extends React.Component{
 
 					Slack.makeTheCall(CONFIG.slack.messages.delivery);
 
+					return this.props.text.default_text;
+
 				}catch(e){
 
 					console.error(e);
@@ -175,22 +227,72 @@ class Default extends React.Component{
 
 	}
 
+	wantDrink () {
+
+		/**
+		 * To keep things dynamic I want to loop through all of my drink options using the lodash each. 
+		 * If all are no thanks we'll omit any drink information
+		 */
+		
+		let noDrinksRequired = false;
+
+		each(this.props.drink, (drink) => {
+
+			if(drink !== 'No Thanks'){
+
+				noDrinksRequired = false;
+
+			}
+
+		})
+
+		/**
+		 * If noDrinksRequired is now false, that means someone wants a drink
+		 */
+		
+		return this.getSource() === 'drinks' && !noDrinksRequired;
+
+	}
+
 	handleTheDrink () {
 		
-		const wantDrink = this.getSource() === 'drinks' && this.props.drink !== 'No thanks';
+		/**
+		 * We only need this if there are drinksToMake
+		 */
+		
+		if(!this.props.drinksToMake) return;
+
+		/**
+		 * Now we have to handle multiple drinks, so we need to check that the array, if only
+		 * one in length doesn't have a value of 'No Thanks'
+		 */
+		
+		const wantDrink = this.wantDrink();
+
+		/**
+		 * Filter all drink names which are 'No Thanks'
+		 */
+				
+		const drinksToMake = this.props.drinksToMake.filter((d) => { return d !== 'No Thanks' })
+		
+		/**
+		 * Modify the drink text
+		 */
+		
+		const drinkMessage = CONFIG.slack.messages.drink.replace('drinkName', this.props.drinksToMake);
 
 		/**
 		 * Let's get someone to fix that drink too, we'll keep it as the default user for now
 		 */
 		
 		if(wantDrink){
-			Slack.makeTheCall(CONFIG.slack.messages.drink, { 
+			Slack.makeTheCall(drinkMessage, { 
 				'slackUser': CONFIG.slack.default_user, 
 				'visitorName': this.props.visitorName,
-				'drinkName': this.props.drink,
+				'drinkNames': drinksToMake,
 			}, CONFIG.slack.default_user);
 
-			return <Text style={ styles.question }>{ this.props.text.drink.replace('drinkOfChoice', this.props.drink) }</Text>;
+			return <Text style={ styles.question }>{ this.props.text.drink.replace('drinkName', this.props.drinksToMake) }</Text>;
 
 		}
 

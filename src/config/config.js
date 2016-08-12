@@ -9,7 +9,7 @@ import TEXT_CONFIG from './textConfig';
 const CONFIG = {
 	'text': TEXT_CONFIG,
 	'slack': {
-		'enabled': false, // Turn this to false for development
+		'enabled': true, // Turn this to false for development
 		'title': 'Reception Desk Announcement',
 		'api': {
 			'root': 'https://slack.com/api/',
@@ -30,10 +30,11 @@ const CONFIG = {
 		// 'fallback_user': 'courtney',
 		// 'notification_group': 'general',
 		'messages' : {
-			'default_message': 'Hey<!channel>, there is a visitor at reception',
-			'visitor': '<!channel>, visitorName from company is here to see <@visiting> in reception',
-			'delivery_nosig': '<!channel>, a package has been dropped at reception',
-			'delivery': '<!channel>, there\'s a courier at reception who needs a signature',
+			'default_message': 'Hey<!channel>, there is a visitor at reception.',
+			'visitor': '<!channel>, visitorName from company is here to see <@visiting> in reception. ',
+			'visitor_not_online': 'It doesn\'t look like they\'re online.', 
+			'delivery_nosig': '<!channel>, a package has been dropped at reception.',
+			'delivery': '<!channel>, there\'s a courier at reception who needs a signature.',
 			'drink': 'Hi <@slackUser>, can you make the visitor (visitorName) a drinkName. Thanks!'
 		}
 	}

@@ -207,6 +207,26 @@ class SlackOAuth {
 	}
 
 	/**
+	 * Checks to see if the user is online
+	 * @param  {string} user The UserID
+	 */
+	
+	async getUserPresence (user) {
+		console.log(user);
+		const userPresence = await this.callToSlack('users.getPresence', ['&user=' + user]);
+		console.log(userPresence);
+		/**
+		 * If the user is present, userPresence.presence will return active
+		 * if not we return false and then react accordingly
+		 */
+		
+		if(userPresence.presence === 'active') return true;
+
+		return false;
+
+	}
+
+	/**
 	 * For the AutoComplete we need to have a list of current users on slack, this is where we get them from
 	 */
 
@@ -245,6 +265,38 @@ class SlackOAuth {
 	}
 	
 	/**
+	 * Gets the ID from either the Name or the UserName
+	 */
+	
+	getUserIdFromName (name) {
+
+		if(this.users){
+
+			let user = this.users.filter((u) => { return u.real_name === name });
+
+			/**
+			 * Probably means that they were using the slack username
+			 */
+			
+			if(user.length === 0) user = this.users.filter((u) => { return u.name === name });
+
+			/**
+			 * if user.length is still 0 then we give up
+			 */
+			
+			if(user.length === 0) return false;
+
+			/**
+			 * Otherwise we want the ID
+			 */
+			
+			return user[0].id;
+			
+		}
+
+	}
+
+	/**
 	 * Gets the Slack user from the realName passed to it
 	 * @param  {string} realName
 	 * @return {string} returns the slack user name. If no name is found in the filter it just returns realName
@@ -254,10 +306,10 @@ class SlackOAuth {
 		
 		if(this.users){
 			
-			let user = this.users.filter((u) => { return u.profile.real_name === realName });
+			let user = this.users.filter((u) => { return u.real_name === realName });
 
 			if(user.length > 0){
-
+				console.log(user)
 				return user[0].name;
 
 			}else{

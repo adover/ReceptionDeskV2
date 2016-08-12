@@ -50,6 +50,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 20
 	},
+	scrollView: {
+		flex: 1,
+		paddingBottom: 50
+	},
 	mainTitle: {
 		color: ysColours['thehulk'],
 		fontSize: 40,
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontFamily: fonts.din,
 		fontWeight: 'bold',
-		marginBottom: 50
+		marginBottom: 20
 	},
 	touchableOption: {
 		marginBottom: 20
@@ -77,7 +81,6 @@ const styles = StyleSheet.create({
 	},	
 	optionNoBorder: optionDefault,
 	button: {
-		marginTop: 50,
 		color: ysColours['courage'],
 		textAlign: 'center',
 		fontSize: 20,
@@ -87,11 +90,27 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		backgroundColor: ysColours['stimpy']
 	},
+	smallText: {
+		color: ysColours['samuraijack'],
+		textAlign: 'right',
+		fontSize: 10,
+		marginTop: -10
+	},
+	error: {
+		color: ysColours['courage'],
+		textAlign: 'center',
+		fontSize: 10,
+	},
 	textInput: {
 		alignSelf: 'stretch',
-		textAlign: 'center',
+		textAlign: 'left',
 		height: 60,
-		padding: 0,
+		flex: 1,
+		padding: 10,
+		borderWidth: 1,
+		borderStyle: 'solid',
+		borderColor: ysColours['edna'], // Setting this as a hack due to the behaviour of autoComplete
+		marginBottom: 20,
 		fontFamily: fonts.din,
 		fontWeight: 'bold',
 		backgroundColor: ysColours['squirtle'],

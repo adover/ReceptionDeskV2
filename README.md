@@ -14,6 +14,8 @@ This is a first attempt at making a React Native application. I've decided to ke
 
 Debugger: http://localhost:8081/debugger-ui - Enable debugging from Simulator, make sure it's enabled in the simulator by pressing `cmd + d`
 
+#### Before you build
+You need to make sure the value at line 680 in MLPAutoCompleteTextField.m (once you've `npm install`ed) is set to 0,0
 ## Redux
 I've decided to use Redux in this implementation but went without ImmutableJS. To me it seems to overcomplicate things which are actually really simple.
 

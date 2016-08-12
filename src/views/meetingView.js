@@ -5,7 +5,8 @@ import {
 	View, 
 	AlertIOS,
 	TextInput,
-	LayoutAnimation
+	LayoutAnimation,
+	ScrollView
 } from 'react-native';
 import { 
 	connect 
@@ -54,12 +55,16 @@ class Meeting extends React.Component{
 		this.stageRenderer = this.stageRenderer.bind(this);
 		this.renderAutoComplete = this.renderAutoComplete.bind(this);
 		this.renderPersonalInfo = this.renderPersonalInfo.bind(this);
+		this.textInputs = this.textInputs.bind(this);
+		this.addPerson = this.addPerson.bind(this);
+		this.extraInputs = null;
 
 		/**
 		 * There's a lot of initialState to declare for this one also
 		 */
 		
 		this.state = {
+			inputCount: 1,
 			inputText: null,
 			optionsVisible: false,
 			people: null,
@@ -67,7 +72,7 @@ class Meeting extends React.Component{
 			personalInfoError: false,
 			autoCompleteError: false,
 			visiting: null,
-			visitorName: null,
+			visitorName: [],
 			company: null,
 		}
 	}
@@ -150,7 +155,7 @@ class Meeting extends React.Component{
 	 */
 	
 	handleSubmit (e) {
-
+		console.log(this.state.visitorName.length)
 		if(this.state.visitorName && this.state.company){
 
 			/**
@@ -173,6 +178,89 @@ class Meeting extends React.Component{
 
 	}
 	
+	/**
+	 * Adds another input to the page where people can add a name, will need to add a condition which stops people
+	 * from adding 100s
+	 */
+	
+	addPerson () {
+
+		/**
+		 * This means that the inputs are being adequately filled in, saves for people fucking about with it
+		 * 'trying to break it'. So annoying when you get a smartass who does that
+		 */
+		console.log(this.state.visitorName.length, this.state.inputCount)
+		if(this.state.visitorName.length === this.state.inputCount){
+
+			const newCount = this.state.inputCount + 1;
+			console.log(newCount, 'NC')
+			this.setState({
+				inputCount: newCount
+			})
+
+		}
+
+	}
+
+	/**
+	 * Adds a visitor to the VisitorName state array
+	 * @param {string} name gets passed when textInput is changed
+	 * @param {int} personCount The number of the TextInput, we use it to modify the array
+	 */
+	
+	addVisitorName (name, personCount) {
+
+		let visitors = this.state.visitorName;
+		
+		/**
+		 * If it's an empty array we'll push the first person to it. As we're passing it on press
+		 * it will actually be the first piece of text that they typed, not ideal but I'd 
+		 * rather do that that push to state on blur, as this may fail in some situations
+		 */
+		
+		if(visitors.length === 0){
+
+			visitors.push(name);
+
+		}else{
+
+			/**
+			 * Splicing based on 0 based arrays
+			 */
+			
+			visitors.splice(personCount - 1, 1, name);
+
+			this.setState({
+				visitorName: visitors
+			})
+
+		}
+
+	}
+
+	/**
+	 * Runs a loop depending on this.state.inputCount and returns the correct amount of inputs
+	 * For the first input autoFocus is set to true
+	 */
+	
+	textInputs () {
+
+		let inputs = [];
+
+		for(let i = 1; i <= this.state.inputCount; i++){
+			inputs.push(
+				<TextInput 
+					ref={ `visitor-${i}` }
+					autoFocus={ i === 1 ? true : false }
+					onChangeText={(name) => { this.addVisitorName(name, i); }} 
+					style={ styles.textInput }
+				/>
+			)
+		}
+		console.log('holy inputs', inputs, this.state.inputCount)
+		return inputs;
+	}
+
 	/**
 	 * The routeName parameter which gets passed relates the route.name switch statement in app.<platform>.js
 	 */
@@ -235,7 +323,7 @@ class Meeting extends React.Component{
 		 */
 		
 		if(this.state.autoCompleteError){
-			autoCompleteError = <Text>{ this.props.view_1.error }</Text>;
+			autoCompleteError = <Text style={ styles.error }>{ this.props.view_1.error }</Text>;
 		}
 
 		return(			
@@ -291,25 +379,35 @@ class Meeting extends React.Component{
 		let personalInfoError;
 
 		if(this.state.personalInfoError){
-			personalInfoError = <Text>{ this.props.view_2.error }</Text>;
+			personalInfoError = <Text style={ styles.error }>{ this.props.view_2.error }</Text>;
 		}
 
 		return(
 			<View>
 				<Text style={ styles.optionNoBorder }>{ this.props.view_2.q }</Text>
-				<TextInput 
-					onChangeText={(name) => this.setState({ visitorName: name })} 
-					style={ styles.textInput }
-					/>
-				<Text style={ styles.optionNoBorder }>{ this.props.view_2.q2 }</Text>
-				<TextInput 
-					onChangeText={(company) => this.setState({ company: company })} 
-					style={ styles.textInput }
-					/>
-        <TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } onPress={ this.handleSubmit }>
-        	<Text style={ styles.button }>{ this.props.view_2.submit.replace('!!!!', 'person') }</Text>
-        </TouchableHighlight>
-        { personalInfoError }
+				<ScrollView
+          ref={(scrollView) => { _scrollView = scrollView; }}
+          automaticallyAdjustContentInsets={false}
+          onScroll={() => { console.log('onScroll!'); }}
+          scrollEventThrottle={200}
+          style={styles.scrollView}>
+          
+					{ this.textInputs() }
+					<TouchableHighlight onPress={ (e) => { this.addPerson() } }>
+						<Text style={ styles.smallText }>{ this.props.view_2.add_person }</Text>
+					</TouchableHighlight>
+					<Text style={ styles.optionNoBorder }>{ this.props.view_2.q2 }</Text>
+					<TextInput 
+						onChangeText={(company) => this.setState({ company: company })} 
+						style={ styles.textInput }
+						/>
+	        <TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } onPress={ this.handleSubmit }>
+	        	<Text style={ styles.button }>{ this.props.view_2.submit.replace('!!!!', this.state.visiting.split(' ')[0] ) }</Text>
+	        </TouchableHighlight>
+	        { personalInfoError }
+
+
+        </ScrollView>
 	   	</View>
 		)
 	}
