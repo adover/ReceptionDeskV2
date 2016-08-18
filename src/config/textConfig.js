@@ -98,7 +98,7 @@ let TEXT_CONFIG = {
 
 const time = new Date().getHours(); 
 
-if (time > 12) {
+if (time < 12) {
 
 	let drinks = TEXT_CONFIG['screen_5']['answers'];
 

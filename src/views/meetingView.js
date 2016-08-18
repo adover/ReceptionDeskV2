@@ -351,6 +351,9 @@ class Meeting extends React.Component{
 				<View style={ styles.row }>
 					<Text style={ styles.mainTitle }>{ this.props.view_1.title }</Text>		
 				</View>
+				<View>
+					{ autoCompleteError }	   
+		   	</View>
 				<View style={ styles.row }>
 					<AutoComplete
 		        onTyping={ (text) => this.handleChange(text) }
@@ -383,9 +386,6 @@ class Meeting extends React.Component{
 		        autoCompleteBoldFontName='Din OT'
 		        autoCompleteTableCellTextColor={'white'}
 		      />
-		   	</View>
-		   	<View>
-					{ autoCompleteError }	   
 		   	</View>
 			 </View>
 		)

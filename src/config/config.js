@@ -9,7 +9,7 @@ import TEXT_CONFIG from './textConfig';
 const CONFIG = {
 	'text': TEXT_CONFIG,
 	'slack': {
-		'enabled': false, // Turn this to false for development
+		'enabled': true, // Turn this to false for development
 		'title': 'Reception Desk Announcement',
 		'api': {
 			'root': 'https://slack.com/api/',
@@ -20,7 +20,7 @@ const CONFIG = {
 		},
 		'default_user': 'andydover',
 		'fallback_user': 'andydover',
-		'notification_group': 'dovertest',
+		'notification_group': 'the_reception_desk',
 		'group_id': 'C0A1ENMAA',
 		// ------------
 		// general

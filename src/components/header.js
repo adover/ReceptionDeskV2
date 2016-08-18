@@ -69,7 +69,12 @@ class Header extends React.Component{
 	
 	pickLogo () {
 
+		/**
+		 * You have to call require in each call otherwise it breaks for some reason
+		 */
+		
 		let url = require('../../images/logo_white.png');
+
 		switch(this.props.route.toString()){
 			case 'Default':
 				url = require('../../images/logo_bart.png');
@@ -86,7 +91,7 @@ class Header extends React.Component{
 				url = require('../../images/logo_white.png');
 			break; 
 		}
-		console.log('URL', url)
+
 		return (
 			<Image source={ url } style={ {
 				width: 150,

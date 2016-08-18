@@ -212,7 +212,10 @@ const styles = StyleSheet.create({
 	error: {
 		color: ysColours['courage'],
 		textAlign: 'center',
-		fontSize: 10,
+		fontFamily: fonts.din,
+		marginTop: -10,
+		marginBottom: 20,
+		fontSize: 12,
 	},
 	textInput: {
 		alignSelf: 'stretch',
