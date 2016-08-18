@@ -5,8 +5,7 @@ import {
 	View, 
 	AlertIOS,
 	TextInput,
-	LayoutAnimation,
-	ScrollView
+	LayoutAnimation
 } from 'react-native';
 import { 
 	connect 
@@ -16,6 +15,15 @@ import styles, {
 	ysColours,
 	fonts
 } from '../styles/styles';
+
+/**
+ * I ended up having enough of the issues with the ScrollView and Keyboard battles so I 
+ * went for this instead
+ */
+
+import { 
+	KeyboardAwareScrollView 
+} from 'react-native-keyboard-aware-scroll-view'
 
 /**
  * This is an AutoComplete addon I found here - https://github.com/nulrich/RCTAutoComplete
@@ -155,7 +163,7 @@ class Meeting extends React.Component{
 	 */
 	
 	handleSubmit (e) {
-		console.log(this.state.visitorName.length)
+
 		if(this.state.visitorName && this.state.company){
 
 			/**
@@ -189,11 +197,11 @@ class Meeting extends React.Component{
 		 * This means that the inputs are being adequately filled in, saves for people fucking about with it
 		 * 'trying to break it'. So annoying when you get a smartass who does that
 		 */
-		console.log(this.state.visitorName.length, this.state.inputCount)
+
 		if(this.state.visitorName.length === this.state.inputCount){
 
 			const newCount = this.state.inputCount + 1;
-			console.log(newCount, 'NC')
+
 			this.setState({
 				inputCount: newCount
 			})
@@ -250,15 +258,21 @@ class Meeting extends React.Component{
 		for(let i = 1; i <= this.state.inputCount; i++){
 			inputs.push(
 				<TextInput 
+					autoCorrect={ false }
 					ref={ `visitor-${i}` }
 					autoFocus={ i === 1 ? true : false }
 					onChangeText={(name) => { this.addVisitorName(name, i); }} 
-					style={ styles.textInput }
+					style={ [styles.textInput, styles.colour_2_bg] }
+					placeholder={ this.props.view_2.q }
+					onSubmitEditing={ () => { 
+    				this.refs.CompanyNameInput.focus(); 
+  				} }
 				/>
 			)
 		}
-		console.log('holy inputs', inputs, this.state.inputCount)
+
 		return inputs;
+
 	}
 
 	/**
@@ -278,10 +292,16 @@ class Meeting extends React.Component{
 	}
 
 	render () {
+				console.log('HEIGHT IS', parseInt(parseInt(this.props.height)));
+//[{height: parseInt(this.props.height)}]
 		return (
-			<View style={ styles.view }>
-				<Text style={ styles.mainTitle }>{ this.props.view_1.title }</Text>
-				{ this.stageRenderer() }					
+			<View style={ [styles.mainView] }>
+				<KeyboardAwareScrollView
+          onScroll={ () => { console.log('onScroll!'); } }
+          scrollEventThrottle={ 200 }
+          style={ styles.scrollView }> 
+					{ this.stageRenderer() }
+				</KeyboardAwareScrollView>					
 			</View>
 		)
 	}
@@ -326,42 +346,48 @@ class Meeting extends React.Component{
 			autoCompleteError = <Text style={ styles.error }>{ this.props.view_1.error }</Text>;
 		}
 
-		return(			
-			<View>
-				<Text style={ styles.question }>{ this.props.view_1.q }</Text>
-				<AutoComplete
-	        onTyping={ (text) => this.handleChange(text) }
-	        onSelect={ (e) => { selectedValue = e; this.autoCompleteSubmit(selectedValue); } }
-	        onSubmitEditing={ (e) => { this.autoCompleteSubmit(selectedValue) } }
+		return(
+			<View style={ styles.fullHeight }>
+				<View style={ styles.row }>
+					<Text style={ styles.mainTitle }>{ this.props.view_1.title }</Text>		
+				</View>
+				<View style={ styles.row }>
+					<AutoComplete
+		        onTyping={ (text) => this.handleChange(text) }
+		        onSelect={ (e) => { selectedValue = e; this.autoCompleteSubmit(selectedValue); } }
+		        onSubmitEditing={ (e) => { this.autoCompleteSubmit(selectedValue) } }
+		        autoFocus= {true}
+		        suggestions={ this.state.people }
 
-	        suggestions={ this.state.people }
+		        placeholder={ this.props.view_1.q }
+		        style={ [styles.textInput, styles.colour_2_bg] }
+		        clearButtonMode='always'
+		        returnKeyType='go'
+		        textAlign='center'
+		        clearTextOnFocus={ true }
 
-	        placeholder={ this.props.view_1.defaultPersonInputValue }
-	        style={ styles.textInput }
-	        clearButtonMode='always'
-	        returnKeyType='go'
-	        textAlign='center'
-	        clearTextOnFocus={ true }
+		        maximumNumberOfAutoCompleteRows={ 10 }
+		        applyBoldEffectToAutoCompleteSuggestions={ true }
+		        reverseAutoCompleteSuggestionsBoldEffect={ true }
+		        showTextFieldDropShadowWhenAutoCompleteTableIsOpen={ false }
+		        autoCompleteTableViewHidden={ false }
 
-	        maximumNumberOfAutoCompleteRows={ 10 }
-	        applyBoldEffectToAutoCompleteSuggestions={ true }
-	        reverseAutoCompleteSuggestionsBoldEffect={ true }
-	        showTextFieldDropShadowWhenAutoCompleteTableIsOpen={ false }
-	        autoCompleteTableViewHidden={ false }
+		        autoCompleteTableBackgroundColor={ ysColours['patrick'] }
+		        autoCompleteTableCornerRadius={ 0 }
+		        autoCompleteTableBorderWidth={ 0 }
 
-	        autoCompleteTableBackgroundColor={ ysColours['squirtle'] }
-	        autoCompleteTableCornerRadius={ 0 }
-	        autoCompleteTableBorderWidth={ 0 }
+		        autoCompleteRowHeight={ 90 }
 
-	        autoCompleteRowHeight={ 60 }
-
-	        autoCompleteFontSize={ 20 }
-	        autoCompleteRegularFontName='Din OT'
-	        autoCompleteBoldFontName='Din OT'
-	        autoCompleteTableCellTextColor={'white'}
-	      />
-				{ autoCompleteError }	   
-	   	</View>
+		        autoCompleteFontSize={ 20 }
+		        autoCompleteRegularFontName='Din OT'
+		        autoCompleteBoldFontName='Din OT'
+		        autoCompleteTableCellTextColor={'white'}
+		      />
+		   	</View>
+		   	<View>
+					{ autoCompleteError }	   
+		   	</View>
+			 </View>
 		)
 	}
 
@@ -383,31 +409,29 @@ class Meeting extends React.Component{
 		}
 
 		return(
-			<View>
-				<Text style={ styles.optionNoBorder }>{ this.props.view_2.q }</Text>
-				<ScrollView
-          ref={(scrollView) => { _scrollView = scrollView; }}
-          automaticallyAdjustContentInsets={false}
-          onScroll={() => { console.log('onScroll!'); }}
-          scrollEventThrottle={200}
-          style={styles.scrollView}>
-          
+			<View style={ styles.fullHeight }>
+				<View style={ styles.row }>
+					<Text style={ styles.mainTitle }>{ this.props.view_1.title }</Text>		
+				</View>				
+				<View style={ styles.column } >
 					{ this.textInputs() }
 					<TouchableHighlight onPress={ (e) => { this.addPerson() } }>
 						<Text style={ styles.smallText }>{ this.props.view_2.add_person }</Text>
 					</TouchableHighlight>
-					<Text style={ styles.optionNoBorder }>{ this.props.view_2.q2 }</Text>
 					<TextInput 
+						autoCorrect={ false }
+						ref="CompanyNameInput"
 						onChangeText={(company) => this.setState({ company: company })} 
-						style={ styles.textInput }
+						style={ [styles.textInput, styles.colour_2_bg] }
+						placeholder={ this.props.view_2.q2 }
 						/>
-	        <TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } onPress={ this.handleSubmit }>
+	        <TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ [styles.touchableButton, styles.colour_2_border] } onPress={ this.handleSubmit }>
 	        	<Text style={ styles.button }>{ this.props.view_2.submit.replace('!!!!', this.state.visiting.split(' ')[0] ) }</Text>
 	        </TouchableHighlight>
-	        { personalInfoError }
-
-
-        </ScrollView>
+		   	</View>
+		   	<View>
+		   		{ personalInfoError }
+		   	</View>
 	   	</View>
 		)
 	}
@@ -423,7 +447,8 @@ const mapStateToProps = state => {
   return { 
   	view_1: state.CONFIG.text.screen_3.view_1,
   	view_2: state.CONFIG.text.screen_3.view_2,
-  	people: state.people
+  	people: state.people,
+  	height: state.height
   }
 }
 

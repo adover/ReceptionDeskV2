@@ -2,6 +2,7 @@ import React from 'react';
 import { 
 	Text, 
 	TouchableHighlight, 
+	TouchableWithoutFeedback,
 	View 
 } from 'react-native';
 import { 
@@ -48,7 +49,7 @@ class Drinks extends React.Component{
 			visiting: this.props.visiting,
 			visitorName: this.props.visitorName,
 			company: this.props.company,
-			amountOfDrinksToMake: this.props.visitorName.length
+			amountOfDrinksToMake: this.props.visitorName ? this.props.visitorName.length : 1
 		})
 
 	}
@@ -116,22 +117,35 @@ class Drinks extends React.Component{
 		 */
 		
 		const drinksToMake = 
-			this.state.amountOfDrinksToMake > 1 ? 
-				<Text style={ styles.smallText }>{ `You have ${this.state.amountOfDrinksToMake} left to choose` }</Text> 
+			this.state.amountOfDrinksToMake > 0 ? 
+				<Text style={ [ styles.smallText, {marginTop: -50}] }>{ `You have ${this.state.amountOfDrinksToMake} to choose` }</Text> 
 					: null;
 
+		/**
+		 * We want to split out the answers so that we can separate the 'No Thanks' answer. It will be styled differently now
+		 */
+		
+		let answers = this.props.text.answers.slice(1, this.props.text.answers.length);
+		let noThanks = this.props.text.answers[0];
+		
 		return (
-			<View style={ styles.view }>
+			<View style={ styles.mainView }>
 				<Text style={ styles.mainTitle }>{ this.props.text.title }</Text>
-				<Text style={ styles.question }>{ this.props.text.q }</Text>
 				{ drinksToMake }
-				{ this.props.text.answers.map((a) => {
-					return (
-						<TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } key={ a } onPress={ () => { this.handleDrinkSelection(a) } }>
-							<Text style={ styles.option }>{ a }</Text>
-						</TouchableHighlight>
-					)
-				}) }
+				<View style={ styles.row }>
+					{ answers.map((a) => {
+						return (
+							<TouchableHighlight style={ [styles.drinkOption, styles.colour_2_border] } key={ a } onPress={ () => { this.handleDrinkSelection(a) } }>
+								<Text style={ styles.option }>{ a }</Text>
+							</TouchableHighlight>
+						)
+					}) }
+				</View>
+				<TouchableWithoutFeedback onPress={ () => { this.handleDrinkSelection('No Thanks') } } >
+					<View>
+						<Text style={ styles.standardFont }>{ noThanks }</Text>
+					</View>
+				</TouchableWithoutFeedback>
 			</View>
 		)
 	}

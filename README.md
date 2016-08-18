@@ -34,6 +34,9 @@ https://github.com/ParsePlatform/parse-server
 - Navigating: https://medium.com/@dabit3/react-native-navigator-navigating-like-a-pro-in-react-native-3cb1b6dc1e30#.votrseb2r
 - oAuth: https://medium.com/@jtremback/oauth-2-with-react-native-c3c7c64cbb6d#.8vp4j49se
 
+### Fixing the keyboard being annoying
+- https://shift.infinite.red/avoiding-the-keyboard-in-react-native-56d05b9a1e81#.4dvsjw91x
+
 ### Animation
 - https://medium.com/@Jpoliachik/react-native-s-layoutanimation-is-awesome-4a4d317afd3e#.g2o975hz7
 - https://facebook.github.io/react-native/docs/animated.html
@@ -50,3 +53,6 @@ https://github.com/ParsePlatform/parse-server
 
 ### Fonts
 - https://medium.com/@dabit3/adding-custom-fonts-to-react-native-b266b41bff7f#.pvbmahi8j
+
+### App Icon Template
+- https://appicontemplate.com/

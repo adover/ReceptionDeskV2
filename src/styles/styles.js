@@ -39,28 +39,129 @@ const optionDefault = {
 		color: ysColours['samuraijack'],
 		textAlign: 'center',
 		fontSize: 20,
-		lineHeight: 40,
-		padding: 10,
+		lineHeight: 20,
 		fontFamily: fonts.din,
 }
 
+const touchableDefault = {
+	marginBottom: 20,
+	flex: 1,
+	margin: 20,
+	padding: 20,
+	justifyContent: 'center',
+	borderWidth: 10,
+	borderStyle: 'solid'
+}
+
+const row = {
+	flexDirection: 'row',
+	alignItems: 'flex-start',
+	alignSelf: 'stretch',
+  flexWrap: 'wrap',
+  flex: 1,
+}
+
+const column = {
+	flex: 1,
+	flexDirection: 'row',
+	alignItems: 'center',
+	backgroundColor: 'green'	
+}
+
+const mainTitle = {
+	color: ysColours['samuraijack'],
+	fontSize: 55,
+	textAlign: 'center',
+	marginBottom: 10,
+	marginTop: 50,
+	fontFamily: fonts.portrait,
+	alignSelf: 'stretch',
+	flex: 0.2
+}
+
+/**
+ * As the stylesheet is growing, I've decided to start splitting stuff out, this will make it eventually
+ * easier to read
+ */
+
+export const welcomeStyles = StyleSheet.create({
+	touchable: {
+		...touchableDefault,
+		borderColor: ysColours['squirtle'],
+		height: 250
+	}
+})
+
 const styles = StyleSheet.create({
-	view: {
+	alignCenter: {
+		alignItems: 'center'
+	},
+	/**
+	 * ScrollView just doesn't seem to enjoy itself unless heights are explicitly set
+	 */
+	fullHeight: {
+		flex: 1
+	},
+	colour_1_border: {
+		borderColor: ysColours['bart'],
+	},
+	colour_2_border: {
+		borderColor: ysColours['patrick'],
+	},	
+	colour_2_bg: {
+		backgroundColor: ysColours['patrick'],
+	},
+	colour_3_border: {
+		borderColor: ysColours['stitch'],
+	},
+	mainView: {
 		backgroundColor: ysColours['edna'],
+		padding: 20,
 		flex: 1,
-		padding: 20
+		flexDirection: 'column'
+	},
+	row: {
+		...row,
+	},
+	/**
+	 * For rows that need a bottom margin
+	 */
+	marginBottom: {
+		marginBottom: 100
+	},
+	header: {
+		height: 50,
+		flexDirection: 'row'
+	},
+	textLeft: {
+		...optionDefault,
+		fontSize: 12,
+		textAlign: 'left',
+		flex: 1
+	},
+	textRight: {
+		...optionDefault,
+		fontSize: 12,
+		textAlign: 'right',
+		flex: 1
 	},
 	scrollView: {
-		flex: 1,
-		paddingBottom: 50
+		height: 200
 	},
 	mainTitle: {
-		color: ysColours['thehulk'],
+		...mainTitle
+	},	
+	subTitle: {
+		...mainTitle,
 		fontSize: 40,
-		textAlign: 'center',
-		marginBottom: 10,
-		marginTop: 50,
-		fontFamily: fonts.portrait
+		marginTop: 70,
+		marginBottom: -20
+	},
+	bigTitle: {
+		...mainTitle,
+		marginBottom: -50,
+		color: ysColours['samuraijack'],
+		fontSize: 80
 	},
 	question: {
 		color: ysColours['samuraijack'],
@@ -70,31 +171,43 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		marginBottom: 20
 	},
-	touchableOption: {
-		marginBottom: 20
-	},
 	option: {
 		...optionDefault,
-		borderWidth: 10,
-		borderColor: ysColours['squirtle'],
-		borderStyle: 'solid'
+		fontWeight: 'bold'
 	},	
 	optionNoBorder: optionDefault,
+	touchableButton: {
+		borderWidth: 10,
+		borderStyle: 'solid',
+		borderColor: 'orange',
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 90
+	},
+	touchable: {
+		marginBottom: 20,
+		margin: 20,
+		padding: 20,
+		borderWidth: 10,
+		borderStyle: 'solid',
+		justifyContent: 'center',
+		height: 90,
+		width: 200,
+	},
 	button: {
-		color: ysColours['courage'],
+		fontWeight: 'bold',
+		color: 'white',
 		textAlign: 'center',
 		fontSize: 20,
-		lineHeight: 40,
-		height: 60,
-		fontFamily: fonts.din,
-		fontWeight: 'bold',
-		backgroundColor: ysColours['stimpy']
+		fontFamily: fonts.din
 	},
 	smallText: {
 		color: ysColours['samuraijack'],
-		textAlign: 'right',
-		fontSize: 10,
-		marginTop: -10
+		textAlign: 'center',
+		fontSize: 16,
+		fontFamily: fonts.din,
+		fontWeight: 'bold',
+		marginBottom: 20
 	},
 	error: {
 		color: ysColours['courage'],
@@ -103,8 +216,8 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		alignSelf: 'stretch',
-		textAlign: 'left',
-		height: 60,
+		textAlign: 'center',
+		height: 90,
 		flex: 1,
 		padding: 10,
 		borderWidth: 1,
@@ -112,10 +225,21 @@ const styles = StyleSheet.create({
 		borderColor: ysColours['edna'], // Setting this as a hack due to the behaviour of autoComplete
 		marginBottom: 20,
 		fontFamily: fonts.din,
+		lineHeight: 50,
 		fontWeight: 'bold',
-		backgroundColor: ysColours['squirtle'],
 		color: ysColours['edna']
+	},
+	drinkOption: {
+		...touchableDefault,
+		width: 250,
+		height: 90,
+		borderWidth: 10,
+		borderStyle: 'solid',
+		borderColor: ysColours['stimpy']
+	},
+	standardFont: {
+		...optionDefault,
+		fontWeight: 'bold'
 	}
 });
-
 export default styles;

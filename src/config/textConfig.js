@@ -8,9 +8,15 @@ import set from 'lodash/set';
 
 let TEXT_CONFIG = {
 	'welcome': 'Welcome to Young + Shand',
+	'routes': {
+		'Welcome': 'Welcome to our office',
+		'Meeting': 'Here for a meeting',
+		'Delivery': 'Something to deliver',
+		'Default': 'Looking to speak to somebody'
+	},
 	'screen_1': {
-		'title': 'Welcome',
-		'q': 'What are you here for today?',
+		'small_title': 'Welcome to our office',
+		'title': 'What are you here for today?',
 		'answers': [
 			{
 				'route_name': 'Default',
@@ -29,21 +35,24 @@ let TEXT_CONFIG = {
 	'screen_2': {
 		// I would like to speak with someone
 		'text': {
-			'default_text': 'Great. Someone will be with you shortly.',
-			'delivery_no_signature': 'Nice. Thanks for dropping it off!',
-			'has_name': 'Cool. personComing will be with you shortly, please take a seat.',
+			'small_title': 'Take a seat',
+			'big_text': 'Great.',
+			'default_text': 'Someone will be with you shortly.',
+			'delivery_no_signature': 'Thanks for dropping it off!',
+			'has_name': 'personComing will be with you shortly, please take a seat.',
 			'drink': 'We\'ll fix you that drink.'
 		}
 	},
 	'screen_3': {
+		'small_title': 'Meeting',
 		// I have a meeting with someone
 		'view_1': {
-			'title': 'Here for a meeting',
-			'q': 'Who do you have a meeting with?',
-			'defaultPersonInputValue': '',
+			'title': 'Who do you have a meeting with?',
+			'q': 'Start typing the name of who you are visiting',
 			'error': 'Please select a name from the drop down'
 		},
 		'view_2': {
+			'title': 'Who do you have a meeting with?',
 			'q': 'What\'s your name?',
 			'q2': 'Which company are you from?',
 			'add_person': 'Add another person',
@@ -53,27 +62,32 @@ let TEXT_CONFIG = {
 	},
 	'screen_4': {
 		// I have a delivery
-		'title': 'Delivering an item',
-		'q': 'Do you need a signature?',
+		'small_title': 'Delivery',
+		'title': 'Do you need a signature?',
 		'answers': [
 			'Yes',
 			'No'
 		]
 	},
 	'screen_5': {
-		// Drink
-		'title': 'Fancy a drink?',
-		'q': 'Do you want a drink?',
+		/**
+		 * As the drink is only available in the meeting scenario we'll cheat a little here,
+		 * this will be the first thing that needs to be expanded
+		 */
+		
+		'small_title': 'Meeting',
+		'title': 'Do you want a drink?',
 		'answers': [
 			'No thanks',
-			'Coffee: Long Black',
-			'Coffee: Flat White',
+			'Long Black Coffee',
+			'Flat White Coffee',
 			'Tea',
 			'Green Tea',
 			'Water',
+			'Sparkling Water',
 			'Beer',
 			'White Wine',
-			'Red Wine'
+			'Red Wine',
 		]
 	}
 }

@@ -8,7 +8,8 @@ import {
 	connect 
 } from 'react-redux';
 import styles, { 
-	ysColours 
+	ysColours,
+	welcomeStyles
 } from '../styles/styles';
 
 class Delivery extends React.Component{
@@ -58,16 +59,17 @@ class Delivery extends React.Component{
 		const text = this.props.text;
 
 		return (
-			<View style={ styles.view }>
+			<View style={ [ styles.mainView ] }>
 				<Text style={ styles.mainTitle }>{ this.props.text.title }</Text>
-				<Text style={ styles.question } >{ this.props.text.q }</Text>
+				<View style={ [ styles.row, { width: 650, alignSelf: 'center' } ] }>
 				{ this.props.text.answers.map((a) => {
 					return (
-						<TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } key={ a } onPress={ () => { this.handleDeliverySelect(a) } }>
+						<TouchableHighlight underlayColor={ ysColours['stitch'] } style={ [welcomeStyles.touchable, styles['colour_3']] } key={ a } onPress={ () => { this.handleDeliverySelect(a) } }>
 							<Text style={ styles.option }>{ a }</Text>
 						</TouchableHighlight>
 					)
 				}) }
+				</View>
 			</View>
 		)
 	}

@@ -149,18 +149,31 @@ class SlackOAuth {
 	
 	callToSlack (method, args = []) {
 
-		const requestURL = [
-			CONFIG.slack.api.root,
-			'/' + method,
-			'?token=' + this.accessDetails.access_token,
-			...args
-		].join('');
+		/**
+		 * Adding in a check for access token. If there isn't one I'll return false
+		 */
+		
+		if(this.accessDetails){
 
-		console.log(method,args);
+			const requestURL = [
+				CONFIG.slack.api.root,
+				'/' + method,
+				'?token=' + this.accessDetails.access_token,
+				...args
+			].join('');
 
-		const url = new Request(requestURL);
-		console.log(url);
-		return doFetch(url);
+			console.log(method,args);
+
+			const url = new Request(requestURL);
+
+			return doFetch(url);
+
+		}else{
+
+			return false;
+
+		}
+
 	}
 
 	/**
@@ -202,7 +215,20 @@ class SlackOAuth {
 			'&attachments=' + attachment
 		]
 
-		this.callToSlack('chat.postMessage', [...args])
+		/**
+		 * I've added a return to the actual call. If it returns false I can make a 
+		 * pretty error
+		 */
+		
+		if(!this.callToSlack('chat.postMessage', [...args])){
+
+			return false;
+		
+		}else{
+
+			return 0;
+
+		}
 
 	}
 

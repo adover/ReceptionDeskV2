@@ -9,7 +9,7 @@ import TEXT_CONFIG from './textConfig';
 const CONFIG = {
 	'text': TEXT_CONFIG,
 	'slack': {
-		'enabled': true, // Turn this to false for development
+		'enabled': false, // Turn this to false for development
 		'title': 'Reception Desk Announcement',
 		'api': {
 			'root': 'https://slack.com/api/',

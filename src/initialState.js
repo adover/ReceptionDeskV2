@@ -33,7 +33,10 @@ const INITIAL_STATE = {
 	slackAccesstoken: null,
 	people: people,
 	CONFIG,
-	drink: null
+	drink: null,
+	chosenRoute: 'Welcome',
+	// The height of the window before and after keyboard showing
+	height: 0
 }
 
 export default INITIAL_STATE;

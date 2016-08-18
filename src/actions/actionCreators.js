@@ -22,3 +22,15 @@ export function addPeople(people) {
 		type: 'ADD_PEOPLE', people 
 	}
 }
+
+export function setRoute(chosenRoute) {
+	return { 
+		type: 'SET_ROUTE', chosenRoute 
+	}
+}
+
+export function setContainerHeight(height) {
+	return {
+		type: 'SET_CONTAINER_HEIGHT', height
+	}
+}

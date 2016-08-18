@@ -2,14 +2,20 @@ import React from 'react';
 import { 
 	Text, 
 	TouchableHighlight, 
-	View 
+	View,
+	Animated,
+  Image,
+  Easing
 } from 'react-native';
 import { 
 	connect 
 } from 'react-redux';
 import styles, { 
-	ysColours 
+	ysColours,
+	welcomeStyles
 } from '../styles/styles';
+import assignIn from 'lodash/assignIn';
+import dispatchOnRouteChange from '../utility/dispatchOnRouteChange';
 
 class Welcome extends React.Component{
 
@@ -26,6 +32,13 @@ class Welcome extends React.Component{
 
 	constructor () {
 		super();
+
+		/**
+		 * Initialising the Animation, this is just tutorial stuff for now
+		 */
+		
+		this.spinVal = new Animated.Value(0);
+
 	}
 	
 	/**
@@ -33,6 +46,9 @@ class Welcome extends React.Component{
 	 */
 	
 	_navigate(routeName){
+
+		dispatchOnRouteChange(routeName);
+		
 	  this.props.navigator.push({
 	    name: routeName,
 	  })
@@ -43,16 +59,17 @@ class Welcome extends React.Component{
 		const text = this.props.text;
 
 		return (
-			<View style={ styles.view }>
+			<View style={ styles.mainView }>
 				<Text style={ styles.mainTitle }>{ text.title }</Text>
-				<Text style={ styles.question }>{ text.q }</Text>
-				{ text.answers.map(a => {
+				<View style={ [styles.row, styles.marginBotton] }>
+				{ text.answers.map((a, idx) => {
 					return (
-						<TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } key={ a.route_name } onPress={ () => this._navigate(a.route_name) }>
+						<TouchableHighlight style={ [welcomeStyles.touchable, styles['colour_' + (idx + 1) + '_border']] } key={ a.route_name } onPress={ () => this._navigate(a.route_name) }>
 						  <Text style={ styles.option }>{ a.text }</Text>
 						</TouchableHighlight>
 						)
 				}) }
+				</View>
 			</View>
 		)
 	}

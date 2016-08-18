@@ -76,6 +76,27 @@ const drink = (state = INITIAL_STATE, action) => {
   return state;
 }
 
+const chosenRoute = (state = INITIAL_STATE, action) => {
+  if(action.type === 'SET_ROUTE'){
+    return assignIn(action.chosenRoute, state)
+  }
+
+  return state;
+}
+
+/**
+ * Sorry for the vague name. This is the height of the window dependent on Keyboard being 
+ * in view or not
+ */
+
+const height = (state = INITIAL_STATE, action) => {
+  if(action.type === 'SET_CONTAINER_HEIGHT'){
+    return assignIn(action.height, state)
+  }
+
+  return state;
+}
+
 /**
  * When combining reducers it's important to produce the same object as the keys applied to it
  * or else it throws an error. 
@@ -86,5 +107,7 @@ export default combineReducers({
   people,
   slackAccesstoken,
   drink,
+  chosenRoute,
+  height,
   CONFIG: (state = {}) => state
 })

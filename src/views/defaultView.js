@@ -12,8 +12,10 @@ import CONFIG from '../config/config';
 import each from 'lodash/each';
 import Slack from '../utility/slackOAuth';
 import styles, { 
-	ysColours 
+	ysColours,
+	welcomeStyles
 } from '../styles/styles';
+import dispatchOnRouteChange from '../utility/dispatchOnRouteChange';
 
 class Default extends React.Component{
 
@@ -32,6 +34,7 @@ class Default extends React.Component{
 		super();
 
 		this.source;
+		this.hasNavigated = false;
 		this.getSource = this.getSource.bind(this);
 		this.getOnTheirWayMessage = this.getOnTheirWayMessage.bind(this);
 		this.handleTheDrink = this.handleTheDrink.bind(this);
@@ -51,17 +54,20 @@ class Default extends React.Component{
 	 */
 	
 	componentDidMount () {
+
+		console.log(this.hasNavigated);
 		
 		this.timer = setTimeout(() => {
 
 			/**
-			 * For some reason the component does not unmount on navigation, so I'll manually clear
-			 * the timeout to ensure it doesn't fire again
+			 * This is being rather niggly, the timers don't seem to clear even if the method is being called before
+			 * we navigate
 			 */
 			
 			clearTimeout(this.timer);
 
 			this._navigate('Welcome');
+
 
 		}, 5000);
 
@@ -301,10 +307,34 @@ class Default extends React.Component{
 	}
 
 	/**
+	 * The colour is different on the button depending on what route we went down, I need to getSource 
+	 * to go from there
+	 */
+	
+	getColourStyle () {
+		switch(this.getSource()){
+			case 'delivery' :
+				return 3
+			break;
+			case 'drinks' :
+				return 2
+			break;
+			default: 
+				return 1
+			break;
+		}
+	}
+
+	/**
 	 * The routeName parameter which gets passed relates the route.name switch statement in app.<platform>.js
 	 */
 	
 	_navigate(routeName){
+		
+		clearTimeout(this.timer);
+
+		dispatchOnRouteChange(routeName);
+
 	  this.props.navigator.push({
 	    name: routeName
 	  })
@@ -315,12 +345,15 @@ class Default extends React.Component{
 		const text = this.props.text;
 		
 		return (
-			<View style={ styles.view }>
-				<Text style={ styles.mainTitle }>{ this.getOnTheirWayMessage() }</Text>
-				{ this.handleTheDrink() }
-				<TouchableHighlight underlayColor={ ysColours['squirtle'] } style={ styles.touchableOption } onPress={ () => this._navigate('Welcome') }>
-					<Text style={ styles.option }>Start over</Text>
-				</TouchableHighlight>
+			<View style={ styles.mainView }>				
+				<View style={ [styles.column, styles.alignCenter, { marginTop: 180 } ] }>
+					<Text style={ [ styles.bigTitle, { marginTop: -50 } ] }>{ this.props.text.big_text }</Text>
+					<Text style={ styles.subTitle }>{ this.getOnTheirWayMessage() }</Text>
+					{ this.handleTheDrink() }
+					<TouchableHighlight style={ [styles.touchable, styles['colour_' + this.getColourStyle() +  '_border']] } onPress={ () => this._navigate('Welcome') }>
+						<Text style={ styles.option }>Start over</Text>
+					</TouchableHighlight>
+				</View>
 			</View>
 		)
 	}
