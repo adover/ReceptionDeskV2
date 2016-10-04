@@ -18,16 +18,16 @@ const CONFIG = {
 			'oauth_uri': 'receptiondesk://auth',
 			'ouath_access_uri': 'https://slack.com/api/oauth.access',
 		},
-		'default_user': 'andydover',
-		'fallback_user': 'andydover',
+		// 'default_user': 'andydover',
+		// 'fallback_user': 'andydover',
 		'notification_group': 'the_reception_desk',
 		'group_id': 'C0A1ENMAA',
 		// ------------
 		// general
 		// C02FSP6Q6
 		// ------------
-		// 'default_user': 'sarah.myers',
-		// 'fallback_user': 'courtney',
+		'default_user': 'sarah.myers',
+		'fallback_user': 'courtney',
 		// 'notification_group': 'general',
 		'messages' : {
 			'default_message': 'Hey<!channel>, there is a visitor at reception.',

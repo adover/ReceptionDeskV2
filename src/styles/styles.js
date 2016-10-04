@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
 		borderColor: ysColours['stitch'],
 	},
 	mainView: {
-		backgroundColor: ysColours['edna'],
+		backgroundColor: ysColours['godzilla'],
 		padding: 20,
 		flex: 1,
 		flexDirection: 'column'
