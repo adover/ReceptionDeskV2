@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "@slack/client": "^3.5.4",
+    "@slack/client": "^5.0.2",
     "lodash": "^4.14.1",
     "moment": "^2.14.1",
     "react": "15.2.1",
